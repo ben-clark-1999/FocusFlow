@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+      "target": "ES2022",
+      "module": "ES2022",
+      "moduleResolution": "Node",
+      "rootDir": "src",
+      "outDir": "dist",            // 👈 emit to dist/
+      "resolveJsonModule": true,
+      "esModuleInterop": true,
+      "strict": true,
+      "noEmit": false
+    },
+    "include": ["src/main/**/*", "src/shared/**/*"]
+  }

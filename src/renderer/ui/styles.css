@@ -1,0 +1,153 @@
+/* ====== Design tokens (light/dark) ====== */
+:root {
+    --radius: 16px;
+    --fg: #0e1116;
+    --muted: #5d6677;
+    --bg: #f7f9fc;
+    --surface: #ffffff;
+    --surface-2: #f0f3f7;
+    --card: #ffffff;
+    --card-emboss: rgba(20,24,35,.06);
+    --accent: #4e8cff;
+    --accent-2: #5bd4a0;
+    --danger: #ff6b6b;
+    --ring: 0 0 0 2px rgba(78,140,255,.55);
+    color-scheme: light;
+  }
+  :root[data-theme="dark"] {
+    --fg: #e9eef5;
+    --muted: #9aa3b2;
+    --bg: #0c0f15;
+    --surface: #11151d;
+    --surface-2: #0f141c;
+    --card: #141a24;
+    --card-emboss: rgba(0,0,0,.35);
+    --accent: #6ea8ff;
+    --accent-2: #59d9a4;
+    --danger: #f36d6d;
+    --ring: 0 0 0 2px rgba(110,168,255,.55);
+    color-scheme: dark;
+  }
+  
+  * { box-sizing: border-box; }
+  html, body, #root { height: 100%; }
+  body {
+    margin: 0;
+    background: radial-gradient(1200px 800px at 70% -10%, rgba(88,125,255,.08), transparent 60%),
+                radial-gradient(1000px 700px at -10% 110%, rgba(89,217,164,.08), transparent 60%),
+                var(--bg);
+    color: var(--fg);
+    font: 14px/1.55 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  }
+  
+  /* ====== Layout ====== */
+  .shell { display:flex; flex-direction:column; height:100%; }
+  .appbar {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 24px; border-bottom:1px solid var(--card-emboss);
+    backdrop-filter: saturate(1.2) blur(6px);
+    position: sticky; top:0; z-index: 5;
+    background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,0)) ;
+  }
+  .brand { display:flex; align-items:center; gap:12px; font-weight:700; letter-spacing:.2px; font-size:18px; }
+  .logo-dot { width:18px; height:18px; border-radius:8px; background: linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow:0 4px 10px rgba(79,140,255,.4); }
+  .actions { display:flex; gap:10px; align-items:center; }
+  
+  .section { padding: 8px 24px 4px; }
+  .loading { padding: 6px 24px; color: var(--muted); }
+  
+  .grid {
+    padding: 14px 24px 100px;
+    display:grid; gap:18px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+  
+  /* ====== Presets bar ====== */
+  .presets .row { display:flex; gap:10px; align-items:center; margin:8px 0; flex-wrap:wrap; }
+  .select { display:flex; gap:8px; align-items:center; color:var(--muted); }
+  .select select {
+    appearance:none; background:var(--surface); color:var(--fg);
+    border:1px solid var(--card-emboss); border-radius:12px; padding:8px 12px;
+  }
+  .input {
+    background:var(--surface); color:var(--fg);
+    border:1px solid var(--card-emboss); border-radius:12px; padding:8px 12px; min-width:180px;
+  }
+  
+  /* ====== Card ====== */
+  .card {
+    background: linear-gradient(180deg, var(--card), var(--surface-2));
+    border: 1px solid var(--card-emboss);
+    border-radius: var(--radius);
+    padding: 16px;
+    box-shadow: 0 12px 28px rgba(0,0,0,.18);
+    transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+    outline: none;
+  }
+  .card:hover { transform: translateY(-2px); box-shadow:0 16px 36px rgba(0,0,0,.24); }
+  .card:focus-within { box-shadow: var(--ring); }
+  .card--active { border-color: rgba(89,217,164,.35); box-shadow: 0 16px 36px rgba(89,217,164,.16); }
+  
+  .card__header { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+  .card__icon-wrap {
+    width:36px; height:36px; display:grid; place-items:center;
+    border-radius:12px; background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.06));
+    color: var(--accent); box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+  }
+  .card__title { font-size:1.15rem; font-weight:700; margin:0; }
+  
+  /* Toggle */
+  .btn-toggle {
+    width:100%; height:44px; border-radius:12px; border:1px solid transparent;
+    font-weight:700; letter-spacing:.2px; cursor:pointer;
+    transition:transform .06s ease, background .15s, color .15s, box-shadow .15s;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.12);
+  }
+  .btn-toggle:active { transform:translateY(1px); }
+  .btn-toggle.is-on {
+    background: linear-gradient(180deg, var(--accent-2), #2a8c63);
+    color:#072e1c;
+  }
+  .btn-toggle.is-off {
+    background: linear-gradient(180deg, var(--accent), #2a56d6);
+    color:#0c1b3b;
+  }
+  
+  /* Sliders */
+  .slider { display:grid; grid-template-columns:auto 1fr; gap:10px; align-items:center; margin:10px 0 2px; }
+  .slider.compact { margin:0; }
+  .slider__label { color:var(--muted); }
+  input[type="range"] { width:100%; accent-color: var(--accent); }
+  
+  /* Footer */
+  .card__footer {
+    margin-top:10px; display:flex; justify-content:space-between; align-items:center;
+    color:var(--muted);
+  }
+  .kbd { padding:.15rem .45rem; border-radius:8px; background:rgba(255,255,255,.06); border:1px solid var(--card-emboss); }
+  
+  /* ====== Buttons ====== */
+  .btn { padding:8px 12px; border-radius:10px; border:1px solid var(--card-emboss); background:var(--surface); color:var(--fg); cursor:pointer; }
+  .btn.primary { background: linear-gradient(180deg, var(--accent), #2b54d6); color:white; border-color: transparent; }
+  .btn.danger { background: linear-gradient(180deg, var(--danger), #cf4b4b); color:white; border-color: transparent; }
+  .btn.ghost { background:transparent; color:var(--fg); }
+  .btn[disabled] { opacity:.5; cursor:not-allowed; }
+  
+  /* ====== Bottom dock ====== */
+  .dock {
+    position: sticky; bottom:0; z-index:5;
+    padding: 10px 16px 14px; background: linear-gradient(180deg, transparent, rgba(0,0,0,.22));
+    backdrop-filter: blur(6px);
+  }
+  .mc {
+    display:flex; justify-content:space-between; align-items:center;
+    gap:14px; border:1px solid var(--card-emboss); border-radius:14px;
+    background: linear-gradient(180deg, var(--surface), var(--surface-2));
+    padding:10px 12px;
+  }
+  .mc__left { display:flex; gap:8px; align-items:center; }
+  .mc__sliders { display:flex; gap:14px; align-items:center; min-width:260px; }
+  
+  /* ====== Status bar (existing) ====== */
+  .status { padding:6px 12px; color:var(--muted); font-size:.9rem; }
+  

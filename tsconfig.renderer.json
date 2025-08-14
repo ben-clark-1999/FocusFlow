@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+      "lib": ["ES2022", "DOM"],
+      "target": "ES2022",
+      "jsx": "react-jsx",
+      "module": "ES2022",
+      "moduleResolution": "Bundler",
+      "strict": true,
+      "types": ["vite/client"]
+    },
+    "include": ["src/renderer/**/*", "src/shared/**/*"]
+  }
+  
