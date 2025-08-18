@@ -46,7 +46,7 @@ export class AudioEngine {
   }
 
   async loadBuffer(id: string, fileAbsPath: string) {
-    const bytes = await window.ambientAPI.readFileArrayBuffer(fileAbsPath);
+    const bytes = await window.FocusFlow.readFileArrayBuffer(fileAbsPath);
     const buf = await this.ctx.decodeAudioData(bytes.slice(0) as ArrayBuffer);
     const p = this.players.get(id)!;
     p.buffer = buf;

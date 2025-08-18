@@ -11,7 +11,7 @@ const fromURL = (u: string | URL) =>
   fileURLToPath(typeof u === 'string' ? new URL(u, import.meta.url) : u);
 
 function getUserStatePath() {
-  return path.join(app.getPath('userData'), 'ambiently-state.json');
+  return path.join(app.getPath('userData'), 'FocusFlow-state.json');
 }
 
 function ensureDefaultState(): void {

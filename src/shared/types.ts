@@ -36,17 +36,20 @@ export interface CpuUsage {
   percent: number; // 0..100
 }
 
-export interface AmbientAPI {
+export interface FocusFlow {
   loadState(): Promise<AppState | null>;
   saveState(state: AppState): Promise<AppState>;
   listLoopFiles(): Promise<string[]>;
-  onCpu(callback: (data: CpuUsage) => void): void;
-  onHotkeyToggleAll(callback: () => void): void;
-  onHotkeyNextPreset(callback: () => void): void;
+  readFileArrayBuffer(absPath: string): Promise<ArrayBuffer>;
+  onCpu(cb: (cpu: CpuUsage) => void): void;
+  onHotkeyToggleAll(cb: () => void): void;
+  onHotkeyNextPreset(cb: () => void): void;
 }
 
 declare global {
   interface Window {
-    ambientAPI: AmbientAPI;
+    FocusFlow: FocusFlow;
   }
 }
+export {};
+

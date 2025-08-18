@@ -1,7 +1,7 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import type { AppState, CpuUsage } from '../shared/types';
 
-contextBridge.exposeInMainWorld('ambientAPI', {
+contextBridge.exposeInMainWorld('FocusFlow', {
   loadState: (): Promise<AppState | null> => ipcRenderer.invoke('state:load'),
   saveState: (state: AppState): Promise<AppState> => ipcRenderer.invoke('state:save', state),
   listLoopFiles: (): Promise<string[]> => ipcRenderer.invoke('loops:list'),
@@ -11,16 +11,3 @@ contextBridge.exposeInMainWorld('ambientAPI', {
   onHotkeyNextPreset: (cb: () => void) => ipcRenderer.on('hotkey:nextPreset', cb)
 });
 
-declare global {
-  interface Window {
-    ambientAPI: {
-      loadState(): Promise<AppState | null>;
-      saveState(state: AppState): Promise<AppState>;
-      listLoopFiles(): Promise<string[]>;
-      readFileArrayBuffer(absPath: string): Promise<ArrayBuffer>;
-      onCpu(cb: (cpu: CpuUsage) => void): void;
-      onHotkeyToggleAll(cb: () => void): void;
-      onHotkeyNextPreset(cb: () => void): void;
-    };
-  }
-}

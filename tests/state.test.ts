@@ -5,7 +5,7 @@ import path from 'path';
 
 describe('state save/load', () => {
   it('writes and reads JSON', () => {
-    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'ambiently-'));
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'FocusFlow-'));
     const state = { hello: 'world', tracks: [{id:'rain',enabled:true,volume:0.5}] };
     const file = path.join(tmp, 'state.json');
     fs.writeFileSync(file, JSON.stringify(state), 'utf-8');
