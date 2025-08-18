@@ -18,6 +18,7 @@
     assets/
         .DS_Store
         icons/
+            Meditating Brain.json
             fire.png
             cafe.png
             bird.png
@@ -36,11 +37,14 @@
             main.tsx
             index.html
             ui/
+                Hero.tsx
                 App.tsx
+                Waterline.tsx
                 MasterControls.tsx
                 styles.css
                 SoundCard.tsx
                 StatusBar.tsx
+                AmbientDecor.tsx
                 icons.tsx
                 PresetsBar.tsx
             audio/

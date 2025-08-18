@@ -14,7 +14,7 @@
     --border: rgba(255,255,255,.08);
     --border-strong: rgba(255,255,255,.14);
   
-    --accent: #6d5ef5;    /* primary accent (ranges) */
+    --accent: #6d5ef5;    /* primary accent (sliders fill) */
     --accent-2: #59d0ff;  /* secondary accent */
     --active-icon: var(--accent-2); /* active card/icon color (dark default) */
   
@@ -28,6 +28,11 @@
     --focus-ring: 3px;
   
     --shadow-card: 0 18px 55px rgba(2,6,23,.35);
+  
+    /* Ambient mesh colors (dark default) */
+    --mesh-dot: rgba(255,255,255,.85);
+    --mesh-line: rgba(149,161,255,.20);
+    --mesh-fade: rgba(3,8,18,.06);
   }
   
   [data-theme="light"]{
@@ -42,16 +47,114 @@
     --border: rgba(7,11,26,.08);
     --border-strong: rgba(7,11,26,.14);
   
+    /* Slider/active hues for light */
+    --accent: #4338ca;   /* stronger on white for contrast */
+    --accent-2: #59d0ff;
+    --active-icon: #4338ca;
+  
     --track: rgba(12,19,32,.16);
     --thumb: #0d1626;
   
-    /* stronger active color on white for better contrast */
-    --active-icon: #4338ca;  /* deep indigo */
+    /* Ambient mesh (light) */
+    --mesh-dot: rgba(10,22,43,.85);
+    --mesh-line: rgba(67,56,202,.18);
+    --mesh-fade: rgba(255,255,255,.06);
   }
   
-  [data-theme="dark"]{
-    /* dark uses :root values */
+  /* >>> Stronger alternatives <<< */
+  
+  /* DARK — SOFT (cooler, inkier, distinct from dark) */
+  /* DARK — SOFT (ink black + cyan/teal accents) */
+  [data-theme="dark-soft"]{
+    /* Surfaces */
+    --bg: #070b12;            /* much darker base */
+    --panel: #0b1220;         /* cooler ink */
+    --panel-2: #09101c;
+
+    /* Text & lines */
+    --text: #eaf6ff;
+    --muted: #9ab6c8;
+    --muted-2: #7aa0b5;
+    --border: rgba(180,220,255,.08);
+    --border-strong: rgba(180,220,255,.16);
+
+    /* Controls (slider fill, active icons) */
+    --accent: #22d3ee;        /* cyan slider fill */
+    --accent-2: #38bdf8;      /* sky */
+    --active-icon: #67e8f9;
+
+    /* Slider track & thumb */
+    --track: rgba(180,220,255,.16);
+    --thumb: #0b1624;
+
+    /* Ambient mesh */
+    --mesh-dot: rgba(210,245,255,.92);
+    --mesh-line: rgba(56,189,248,.26);
+    --mesh-fade: rgba(4,10,18,.10);
+
+    /* Logo tinting (optional, if you use it) */
+    --logo-halo-1:#60e8ff; --logo-halo-2:#22d3ee;
+    --logo-dot:#22d3ee;
   }
+
+  
+  /* LIGHT — WARM (paper, warmer ink, very distinct from light) */
+  /* LIGHT — WARM (parchment + violet/amber accents) */
+  [data-theme="light-warm"]{
+    /* Surfaces */
+    --bg: #fff2d9;            /* warmer, brighter background */
+    --panel: #ffffff;
+    --panel-2: #fff8ea;
+
+    /* Text & lines */
+    --text: #2a2116;          /* deep brown/ink */
+    --muted: #6f5c45;
+    --muted-2: #54483a;
+    --border: rgba(106,82,51,.18);
+    --border-strong: rgba(106,82,51,.26);
+
+    /* Controls (slider fill, active icons) */
+    --accent: #7c3aed;        /* violet slider fill */
+    --accent-2: #f59e0b;      /* amber secondary */
+    --active-icon: #9333ea;
+
+    /* Slider track & thumb */
+    --track: rgba(106,82,51,.22);
+    --thumb: #1f2937;
+
+    /* Ambient mesh */
+    --mesh-dot: rgba(51,39,24,.95);
+    --mesh-line: rgba(124,58,237,.34);
+    --mesh-fade: rgba(255,255,255,.14);
+
+    /* Logo tinting (optional, if you use it) */
+    --logo-halo-1:#c4b5fd; --logo-halo-2:#fbbf24;
+    --logo-dot:#8b5cf6;
+  }
+
+  /* Dark-soft waves (cyan/sky) */
+  [data-theme="dark-soft"] .wave {
+    background:
+      radial-gradient(120px 40px at 10% 50%, color-mix(in oklab, #22d3ee 30%, transparent), transparent 60%),
+      radial-gradient(120px 40px at 40% 50%, color-mix(in oklab, #38bdf8 26%, transparent), transparent 60%),
+      radial-gradient(120px 40px at 70% 50%, color-mix(in oklab, #22d3ee 30%, transparent), transparent 60%),
+      radial-gradient(120px 40px at 100% 50%, color-mix(in oklab, #38bdf8 26%, transparent), transparent 60%);
+  }
+
+  /* Light-warm waves (violet/amber) */
+  [data-theme="light-warm"] .wave {
+    background:
+      radial-gradient(120px 40px at 10% 50%, color-mix(in oklab, #7c3aed 28%, transparent), transparent 60%),
+      radial-gradient(120px 40px at 40% 50%, color-mix(in oklab, #f59e0b 24%, transparent), transparent 60%),
+      radial-gradient(120px 40px at 70% 50%, color-mix(in oklab, #7c3aed 28%, transparent), transparent 60%),
+      radial-gradient(120px 40px at 100% 50%, color-mix(in oklab, #f59e0b 24%, transparent), transparent 60%);
+  }
+
+  
+  /* Status line color tokens */
+  :root { --status: #cfd7ea; }
+  [data-theme="light"]{ --status: #2b3550; }
+  [data-theme="light-warm"]{ --status: #2e2c28; }
   
   /* ================================
      Base
@@ -88,13 +191,15 @@
      ================================ */
   
   .app{
+    position: relative;
     display:grid;
     grid-template-rows:auto auto auto 1fr auto;
     min-height:100%;
     gap:16px;
-    max-width:1200px;   /* keep inside the visual frame */
+    max-width:1200px;            /* keep inside the visual frame */
     margin:0 auto;
-    padding:16px 16px 72px; /* extra bottom padding so last row isn't clipped */
+    padding:16px 16px 72px;      /* extra bottom padding so last row isn't clipped */
+    z-index: 1;                  /* above ambient mesh */
   }
   
   .topbar{
@@ -118,6 +223,23 @@
     gap:18px;
     align-content:start;
     margin-bottom:16px; /* breathing room above status bar */
+  }
+  
+  /* ================================
+     Ambient: Constellation Mesh
+     ================================ */
+  
+  .ambient-mesh{
+    position: fixed;
+    inset: 0;
+    z-index: 0;          /* behind cards */
+    pointer-events: none;
+  }
+  
+  /* Damp effect further for reduced motion users via JS + CSS */
+  @media (prefers-reduced-motion: reduce){
+    :root{ --mesh-fade: rgba(3,8,18,.12); }
+    [data-theme="light"]{ --mesh-fade: rgba(255,255,255,.12); }
   }
   
   /* ================================
@@ -310,7 +432,7 @@
      Sliders (range inputs)
      ================================ */
   
-  /* React should set --val (0..1). We paint the track using a split gradient. */
+  /* React sets --val (0..1). We paint the track using a split gradient. */
   .ff-slider{
     display:grid;
     grid-template-columns:120px 1fr;
@@ -375,20 +497,22 @@
   .ff-range:disabled{ filter: grayscale(.35) opacity(.6); cursor:not-allowed; }
   
   /* ================================
-     Presets / Status
+     Status Bar (high contrast)
      ================================ */
   
-  .status-bar{
+  /* Support both class names (StatusBar.tsx uses "statusbar") */
+  .status-bar,
+  .statusbar{
     display:flex;
     align-items:center;
     gap:12px;
-    color:var(--muted-2);
+    color: var(--status);
     font-size:13px;
-    padding:2px 4px 14px;
+    padding:6px 6px 14px;
   }
   
   /* ================================
-     Forms
+     Forms (misc)
      ================================ */
   
   select.btn{
@@ -413,5 +537,133 @@
   @media (max-width: 620px){
     .ff-slider{ grid-template-columns:1fr; gap:8px; }
     .grid{ grid-template-columns:1fr; }
+  }
+  
+  /* ---------- HERO ---------- */
+  :root{
+    --hero-accent-1:#6d5ef5;
+    --hero-accent-2:#59d0ff;
+    --hero-ink:#0f1320;
+    --hero-eye:#eef6ff;
+    --hero-wire:#aab7d4;
+    --hero-pad:#d7def0;
+    --hero-book:#121a2f;
+  }
+  [data-theme="light"]{
+    --hero-ink:#0e1526;
+    --hero-eye:#0e1526;
+    --hero-wire:#7d8bb0;
+    --hero-pad:#e9eefb;
+    --hero-book:#10182c;
+  }
+  
+  .hero{
+    position: relative;
+    padding: 64px 16px 40px;
+  }
+  .hero__inner{
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    align-items: center;
+    gap: 18px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .hero__logo{ filter: drop-shadow(0 10px 30px rgba(0,0,0,.25)); }
+  .hero__title{
+    font-size: clamp(36px, 7vw, 56px);
+    line-height: 1.05;
+    margin: 0;
+    text-shadow: 0 10px 30px rgba(2,6,23,.25);
+  }
+  .hero__subtitle{
+    margin: 8px 0 14px;
+    color: var(--muted-2);
+    font-size: clamp(16px, 2.8vw, 20px);
+  }
+  .hero__cta{ display: flex; gap: 10px; flex-wrap: wrap; }
+  
+  @media (max-width: 620px){
+    .hero__inner{ grid-template-columns: 1fr; text-align: center; }
+    .hero__cta{ justify-content: center; }
+  }
+  
+  /* ---------- MIXER SECTION ---------- */
+  .mixer{ position: relative; z-index: 1; }
+  
+  /* ---------- WATERLINE ---------- */
+  .waterline{
+    position: relative;
+    height: 140px;
+    margin-top: 8px;
+    overflow: hidden;
+  }
+  .wave{
+    position: absolute;
+    left: -25%;
+    width: 150%;
+    height: 120px;
+    background:
+      radial-gradient(120px 40px at 10% 50%, color-mix(in oklab, var(--accent) 25%, transparent), transparent 60%),
+      radial-gradient(120px 40px at 40% 50%, color-mix(in oklab, var(--accent-2) 25%, transparent), transparent 60%),
+      radial-gradient(120px 40px at 70% 50%, color-mix(in oklab, var(--accent) 25%, transparent), transparent 60%),
+      radial-gradient(120px 40px at 100% 50%, color-mix(in oklab, var(--accent-2) 25%, transparent), transparent 60%);
+    opacity: .35;
+    animation: wave-pan 22s linear infinite;
+    transform: translateZ(0);
+  }
+  .wave--back{ bottom: 0; filter: blur(6px); }
+  .wave--front{ bottom: -6px; opacity: .5; animation-duration: 16s; }
+  
+  .reflection{
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 60px;
+    background: linear-gradient(to bottom, rgba(255,255,255,.08), transparent 70%);
+    mix-blend-mode: screen;
+    opacity: .3;
+  }
+  
+  @keyframes wave-pan{
+    0%{ transform: translateX(0); }
+    100%{ transform: translateX(-20%); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .wave{ animation: none; }
+  }
+  
+  /* Floating theme select (top-right) */
+  .theme-select{
+    position: fixed;
+    top: 14px;
+    right: 16px;
+    z-index: 2;
+  }
+  .theme-select .ff-select{ height: 36px; }
+  
+  /* Logo tokens (default = dark) */
+  :root{
+    --logo-halo-1:#95a6ff;
+    --logo-halo-2:#59d0ff;
+    --logo-moon:#e7f0ff;
+    --logo-band:#b8c2e2;
+    --logo-pad:#e9eefb;
+    --logo-book:#0f162a;
+    --logo-dot:#59d0ff;
+  }
+  [data-theme="dark-soft"]{
+    --logo-halo-1:#a1b6ff; --logo-halo-2:#6bd7ff;
+    --logo-moon:#f0f6ff;   --logo-band:#c4cdeb; --logo-pad:#eff3ff;
+    --logo-book:#10182c;   --logo-dot:#6aa9ff;
+  }
+  [data-theme="light"]{
+    --logo-halo-1:#a5b4fc; --logo-halo-2:#93c5fd;
+    --logo-moon:#0f162a;   --logo-band:#7d8bb0; --logo-pad:#e9eefb;
+    --logo-book:#10182c;   --logo-dot:#4338ca;
+  }
+  [data-theme="light-warm"]{
+    --logo-halo-1:#c4b5fd; --logo-halo-2:#fbbf24;
+    --logo-moon:#1f2937;   --logo-band:#9a8fb5; --logo-pad:#fff6e6;
+    --logo-book:#1a2235;   --logo-dot:#8b5cf6;
   }
   
