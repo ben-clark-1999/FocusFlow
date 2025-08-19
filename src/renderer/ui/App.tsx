@@ -30,6 +30,13 @@ declare global {
 const loopUrl = (fileName: string) =>
   new URL(`../../../assets/loops/${fileName}`, import.meta.url).href;
 
+/* ---------- ID remap for legacy presets ---------- */
+function remapId(id: string) {
+  // Legacy rename(s)
+  if (id === 'brown') return 'bird';
+  return id;
+}
+
 /* ---------- app ---------- */
 export default function App() {
   const engineRef = useRef<AudioEngine | null>(null);
@@ -38,7 +45,6 @@ export default function App() {
 
   const [state, setState] = useState<AppState>(DEFAULT_STATE);
   // Theme options (no “system”)
-  // type ThemeKey = 'dark' | 'dark-soft' | 'light' | 'light-warm';
   type ThemeKey = 'dark' | 'neon-dark' | 'light' | 'light-warm';
   const [theme, setTheme] = useState<ThemeKey>('dark');
 
@@ -82,18 +88,25 @@ export default function App() {
           : 'dark'
       );
 
-      // Start with everything OFF
+      // Start with everything OFF and remap any legacy ids
       const cleared: AppState = {
         ...loaded,
         theme: undefined as any, // UI owns theme now
         tracks: TRACKS.map(t => {
-          const prev = loaded.tracks.find(x => x.id === t.id);
+          const prev = loaded.tracks.find(x => remapId(x.id) === t.id);
           return {
             id: t.id,
             enabled: false,
             volume: prev ? prev.volume : t.defaultVolume
           };
-        })
+        }),
+        // Also normalize any stored presets
+        presets: Array.isArray(loaded.presets)
+          ? loaded.presets.map((p: Preset) => ({
+              ...p,
+              tracks: p.tracks.map(tr => ({ ...tr, id: remapId(tr.id) }))
+            }))
+          : []
       };
 
       setState(cleared);
@@ -223,18 +236,48 @@ export default function App() {
     });
   }
   function setCrossfade(v: number) { setState(prev => ({ ...prev, crossfadeSec: v })); queueMicrotask(() => (engineRef.current as any)?.setCrossfade?.(v)); }
+
+  // --- SAFE applyPreset: rebuild from canonical TRACKS + remap ids ---
   function applyPreset(p: Preset) {
-    setState(prev => ({ ...prev, masterVolume: p.masterVolume, crossfadeSec: p.crossfadeSec, tracks: p.tracks.map(t=>({...t})) }));
+    const nextTracks: TrackState[] = TRACKS.map(t => {
+      const match = p.tracks.find(x => remapId(x.id) === t.id);
+      return {
+        id: t.id,
+        enabled: !!match?.enabled,
+        volume: typeof match?.volume === 'number' ? match.volume : t.defaultVolume,
+      } as TrackState;
+    });
+
+    const next: AppState = {
+      ...state,
+      masterVolume: p.masterVolume,
+      crossfadeSec: p.crossfadeSec,
+      tracks: nextTracks,
+    };
+
+    setState(next);
+
     queueMicrotask(() => {
-      for (const t of p.tracks){ const a = htmlAudioRef.current[t.id]; if (a) a.volume = clamp01(t.volume * p.masterVolume); }
-      const e: any = engineRef.current; e?.setMasterVolume?.(p.masterVolume); e?.setCrossfade?.(p.crossfadeSec);
-      for (const t of p.tracks) commitTrackToEngine(t.id, t.enabled, t.volume);
+      for (const t of nextTracks) {
+        const a = htmlAudioRef.current[t.id];
+        if (a) a.volume = clamp01(t.volume * next.masterVolume);
+      }
+      const e: any = engineRef.current;
+      e?.setMasterVolume?.(next.masterVolume);
+      e?.setCrossfade?.(next.crossfadeSec);
+      for (const t of nextTracks) commitTrackToEngine(t.id, t.enabled, t.volume);
     });
   }
+
   function savePreset(name: string, overwrite: boolean) {
     setState(prev => {
       const i = prev.presets.findIndex(p => p.name === name);
-      const snapshot: Preset = { name, masterVolume: prev.masterVolume, crossfadeSec: prev.crossfadeSec, tracks: prev.tracks.map(t=>({...t})) } as any;
+      const snapshot: Preset = {
+        name,
+        masterVolume: prev.masterVolume,
+        crossfadeSec: prev.crossfadeSec,
+        tracks: prev.tracks.map(t=>({...t}))
+      } as any;
       let arr = prev.presets.slice();
       if (i >= 0 && overwrite) arr[i] = snapshot; else if (i === -1) arr.push(snapshot);
       const next = { ...prev, presets: arr, lastSaved: new Date().toISOString() };
@@ -264,9 +307,13 @@ export default function App() {
     window.addEventListener('keydown', onKey); return () => window.removeEventListener('keydown', onKey);
   }, []);
 
+  // --- Hardened withState: provide a safe default if missing ---
   const withState = useMemo(() => {
     const map = new Map(state.tracks.map<[string, TrackState]>(t => [t.id, t]));
-    return TRACKS.map(meta => ({ meta, ts: map.get(meta.id)! }));
+    return TRACKS.map(meta => {
+      const ts = map.get(meta.id) ?? { id: meta.id, enabled: false, volume: meta.defaultVolume };
+      return { meta, ts };
+    });
   }, [state.tracks]);
 
   const scrollToMixer = () => {
@@ -291,11 +338,10 @@ export default function App() {
           aria-label="Theme"
         >
           <option value="dark">Dark</option>
-          <option value="neon-dark">Neon Dark</option>   {/* renamed */}
+          <option value="neon-dark">Neon Dark</option>
           <option value="light">Light</option>
           <option value="light-warm">Light – Warm</option>
         </select>
-
       </div>
 
       {/* MIXER */}
