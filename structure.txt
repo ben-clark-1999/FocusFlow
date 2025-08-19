@@ -18,19 +18,27 @@
     assets/
         .DS_Store
         icons/
+            river.png
             Meditating Brain.json
+            thunder.png
             fire.png
             cafe.png
             bird.png
             wind.png
+            ocean.png
+            night.png
             rain.png
         loops/
             bird.wav
             wind.wav
             fire.wav
             cafe.wav
+            thunder.wav
+            river.wav
             README.md
+            ocean.wav
             rain.wav
+            night.wav
     src/
         .DS_Store
         renderer/

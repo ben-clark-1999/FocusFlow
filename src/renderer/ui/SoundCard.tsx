@@ -1,7 +1,7 @@
 // SoundCard.tsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import type { TrackMeta, TrackState } from '../../shared/types';
-import { TrackImage } from './icons';
+import { ICONS } from './icons';
 
 type Props = {
   meta: TrackMeta;
@@ -18,7 +18,14 @@ export default function SoundCard({ meta, state, onToggle, onVolume, getRemainin
     return () => clearInterval(iv);
   }, [getRemaining]);
 
-  const img = TrackImage[meta.id];
+  const img = ICONS[meta.id as keyof typeof ICONS];
+
+  // If CSS masks aren’t supported (or fail), fall back to a tinted <img>
+  const supportsMask = useMemo(() => {
+    try {
+      return CSS.supports('mask-image', 'url("")') || CSS.supports('-webkit-mask-image', 'url("")');
+    } catch { return false; }
+  }, []);
 
   return (
     <section
@@ -39,15 +46,31 @@ export default function SoundCard({ meta, state, onToggle, onVolume, getRemainin
       }}
     >
       <header className="card__header track-hero">
-        {/* PNG icon colored via CSS mask + currentColor */}
-        <span
-          className="track-icon-img"
-          style={{
-            WebkitMaskImage: `url(${img})`,
-            maskImage: `url(${img})`,
-          }}
-          aria-hidden="true"
-        />
+        {supportsMask ? (
+          // Preferred: paint the PNG silhouette with currentColor
+          <span
+            className="track-icon-img"
+            style={{
+              WebkitMaskImage: `url(${img})`,
+              maskImage: `url(${img})`,
+            }}
+            aria-hidden="true"
+          />
+        ) : (
+          // Fallback: show the PNG and tint it
+          <img
+            src={img}
+            alt=""
+            aria-hidden="true"
+            style={{
+              width: 28,
+              height: 28,
+              objectFit: 'contain',
+              filter: 'brightness(0) invert(1)', // looks good on dark; see light tweaks below
+            }}
+          />
+        )}
+
         <h2 className="card__title">{meta.name}</h2>
       </header>
 
