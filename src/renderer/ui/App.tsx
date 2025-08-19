@@ -38,8 +38,10 @@ export default function App() {
 
   const [state, setState] = useState<AppState>(DEFAULT_STATE);
   // Theme options (no “system”)
-  type ThemeKey = 'dark' | 'dark-soft' | 'light' | 'light-warm';
+  // type ThemeKey = 'dark' | 'dark-soft' | 'light' | 'light-warm';
+  type ThemeKey = 'dark' | 'neon-dark' | 'light' | 'light-warm';
   const [theme, setTheme] = useState<ThemeKey>('dark');
+
   const [cpu, setCpu] = useState(0);
   const didBindResume = useRef(false);
 
@@ -75,7 +77,7 @@ export default function App() {
       // Coerce theme to one of the supported keys
       const loadedTheme = (loaded as any).theme as ThemeKey;
       setTheme(
-        loadedTheme === 'dark' || loadedTheme === 'dark-soft' || loadedTheme === 'light' || loadedTheme === 'light-warm'
+        loadedTheme === 'dark' || loadedTheme === 'neon-dark' || loadedTheme === 'light' || loadedTheme === 'light-warm'
           ? loadedTheme
           : 'dark'
       );
@@ -287,13 +289,13 @@ export default function App() {
           value={theme}
           onChange={(e) => setTheme(e.target.value as ThemeKey)}
           aria-label="Theme"
-          title="Theme"
         >
           <option value="dark">Dark</option>
-          <option value="dark-soft">Dark – Soft</option>
+          <option value="neon-dark">Neon Dark</option>   {/* renamed */}
           <option value="light">Light</option>
           <option value="light-warm">Light – Warm</option>
         </select>
+
       </div>
 
       {/* MIXER */}

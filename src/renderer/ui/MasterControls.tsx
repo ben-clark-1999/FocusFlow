@@ -69,9 +69,7 @@ export default function MasterControls({
         <button className="btn" onClick={onStopAll}>
           Stop All
         </button>
-        <button className="btn ghost" onClick={onSave}>
-          Save Session
-        </button>
+        
       </div>
     </section>
   );
